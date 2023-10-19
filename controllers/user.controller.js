@@ -1,5 +1,7 @@
 const { response, request } = require('express')
 
+const User = require('./../models/user')
+
 const usersGet = (_, res = response) => {
   res.status(200).json({
     success: true,
@@ -18,12 +20,24 @@ const usersGet = (_, res = response) => {
   })
 }
 
-const usersPost = (req = request, res = response) => {
-  res.status(200).json({
-    success: true,
-    response: 'The user was created!',
-    data: req.body
-  })
+const usersPost = async (req = request, res = response) => {
+  try {
+    const { name, mail, password, role } = req.body
+
+    const user = new User({ name, mail, password, role })
+
+    await user.save()
+
+    res.status(200).json({
+      success: true,
+      response: 'The user was created!',
+      data: {
+        user
+      }
+    })
+  } catch (err) {
+    res.status(500).json({ error: err, message: 'Internal Server Error' })
+  }
 }
 
 const usersPut = (req = request, res = response) => {

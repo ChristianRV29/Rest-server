@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 
 const router = require('./../routes/user.routes')
+const { dbConnection } = require('./../database/config')
 
 class Server {
   constructor() {
@@ -13,6 +14,13 @@ class Server {
 
     // Routes of my application
     this.routes()
+
+    // Connect to data base
+    this.connectDB()
+  }
+
+  async connectDB() {
+    await dbConnection()
   }
 
   middlewares() {
