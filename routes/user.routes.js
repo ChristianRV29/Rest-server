@@ -1,18 +1,29 @@
 const router = require('express').Router()
-
 const { check } = require('express-validator')
 
 const {
   usersGet,
   usersPost,
   usersPut
-} = require('./../controllers/user.controller')
+} = require('../controllers/user.controller')
+const { checkFields } = require('../middlewares/fields-validator')
+
+const { validateRoleField } = require('../helpers/db-validators')
 
 router.get('/', usersGet)
 
 router.post(
   '/',
-  [check('email', 'The email is not valid').isEmail()],
+  // Middlewares
+  [
+    check('name', 'The name is mandatory').not().isEmpty(),
+    check('email', 'The email is not valid').isEmail(),
+    check('password', 'The password must have at least 6 characters').isLength({
+      min: 6
+    }),
+    check('role').custom(validateRoleField),
+    checkFields
+  ],
   usersPost
 )
 
