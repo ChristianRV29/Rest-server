@@ -5,9 +5,9 @@ const UserSchema = Schema({
     type: String,
     required: [true, 'Name is required']
   },
-  mail: {
+  email: {
     type: String,
-    required: [true, 'Mail is required'],
+    required: [true, 'Email is required'],
     unique: true
   },
   password: {
@@ -27,7 +27,7 @@ const UserSchema = Schema({
       type: Boolean,
       default: false
     },
-    mail: {
+    email: {
       type: Boolean,
       default: true
     }

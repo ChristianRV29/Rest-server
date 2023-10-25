@@ -1,4 +1,5 @@
 const { response, request } = require('express')
+const { validationResult } = require('express-validator')
 
 const User = require('./../models/user')
 
@@ -20,11 +21,28 @@ const usersGet = (_, res = response) => {
   })
 }
 
+// TODO: Figure out why is not allowing save more than one user
 const usersPost = async (req = request, res = response) => {
   try {
-    const { name, mail, password, role } = req.body
+    const errors = validationResult(req)
 
-    const user = new User({ name, mail, password, role })
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors)
+    }
+
+    const { name, email, password, role } = req.body
+
+    const user = new User({ name, email, password, role })
+
+    const doesExist = await User.findOne({ email })
+
+    if (doesExist) {
+      return res.status(400).json({
+        field: 'email',
+        message: 'The email already exists',
+        value: email
+      })
+    }
 
     await user.save()
 
