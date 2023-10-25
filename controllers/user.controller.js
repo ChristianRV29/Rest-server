@@ -44,7 +44,7 @@ const usersPost = async (req = request, res = response) => {
       })
     }
 
-    await user.save({ name, email, password, role })
+    await user.save()
 
     res.status(200).json({
       success: true,
