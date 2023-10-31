@@ -1,6 +1,9 @@
 const { response, request } = require('express')
 
+const bcrypt = require('bcryptjs')
+
 const User = require('../models/user')
+const { checkEmailExist } = require('../helpers/db-validators')
 
 const usersGet = (_, res = response) => {
   res.status(200).json({
@@ -20,22 +23,15 @@ const usersGet = (_, res = response) => {
   })
 }
 
-// TODO: Figure out why is not allowing save more than one user
 const usersPost = async (req = request, res = response) => {
   try {
     const { name, email, password, role } = req.body
 
     const user = new User({ name, email, password, role })
 
-    const doesExist = await User.findOne({ email })
-
-    if (doesExist) {
-      return res.status(400).json({
-        field: 'email',
-        message: 'The email already exists',
-        value: email
-      })
-    }
+    // Encrypt password
+    const salt = bcrypt.genSaltSync(10)
+    user.password = bcrypt.hashSync(salt)
 
     await user.save()
 
