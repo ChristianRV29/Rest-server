@@ -7,13 +7,20 @@ const validateRoleField = async (role = '') => {
   if (!doesRoleExist) throw new Error("The role doesn't exist within data base")
 }
 
-const checkEmailExist = async (email) => {
+const checkEmailExists = async (email) => {
   const doesEmailExist = await User.findOne({ email })
 
   if (doesEmailExist) throw new Error('The email already exists')
 }
 
+const checkIdExists = async (id) => {
+  const doesIdExist = await User.findById(id)
+
+  if (!doesIdExist) throw new Error('The id does not exist')
+}
+
 module.exports = {
-  checkEmailExist,
+  checkEmailExists,
+  checkIdExists,
   validateRoleField
 }

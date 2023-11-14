@@ -9,8 +9,9 @@ const {
 const { checkFields } = require('../middlewares/fields-validator')
 
 const {
-  validateRoleField,
-  checkEmailExist
+  checkEmailExists,
+  checkIdExists,
+  validateRoleField
 } = require('../helpers/db-validators')
 
 router.get('/', usersGet)
@@ -20,7 +21,7 @@ router.post(
   // Middlewares
   [
     check('name', 'The name is mandatory').not().isEmpty(),
-    check('email').custom(checkEmailExist),
+    check('email').custom(checkEmailExists),
     check('password', 'The password must have at least 6 characters').isLength({
       min: 6
     }),
@@ -30,7 +31,16 @@ router.post(
   usersPost
 )
 
-router.put('/:id', usersPut)
+router.put(
+  '/:id',
+  [
+    check('id', 'It is not a valid ID').isMongoId(),
+    check('id').custom(checkIdExists),
+    check('role').custom(validateRoleField),
+    checkFields
+  ],
+  usersPut
+)
 
 router.delete('/', (req, res) => {})
 
