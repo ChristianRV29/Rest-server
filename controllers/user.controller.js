@@ -74,7 +74,29 @@ const usersPut = async (req = request, res = response) => {
   }
 }
 
+const usersDelete = async (req = request, res = response) => {
+  try {
+    const { id } = req.params
+
+    // Physical deletion of a document
+    // const user = await User.findByIdAndDelete({ _id: id })
+
+    const user = await User.findByIdAndUpdate(id, { status: false })
+
+    res.status(200).json({
+      success: true,
+      message: 'The user was deleted!',
+      data: {
+        user
+      }
+    })
+  } catch (err) {
+    res.status(500).json({ error: err, message: 'Internal Server Error' })
+  }
+}
+
 module.exports = {
+  usersDelete,
   usersGet,
   usersPost,
   usersPut
