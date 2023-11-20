@@ -10,17 +10,18 @@ const usersGet = async (req = request, res = response) => {
   const limitOfUsers = Number(limit)
   const query = { status: true }
 
-  const users = await User.find(query).limit(limitOfUsers).skip(Number(from))
+  const allUsers = User.find(query).limit(limitOfUsers).skip(Number(from))
+  const totalUsers = User.countDocuments(query)
 
-  const total = await User.countDocuments(query)
+  const [total, users] = await Promise.all([totalUsers, allUsers])
 
   res.status(200).json({
     success: true,
     message: 'The users were brought!',
     data: {
-      users,
       count: limitOfUsers,
-      total
+      total,
+      users
     }
   })
 }
