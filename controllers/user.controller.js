@@ -4,20 +4,17 @@ const bcrypt = require('bcryptjs')
 
 const User = require('../models/user')
 
-const usersGet = (_, res = response) => {
+const usersGet = async (req = request, res = response) => {
+  const { from = 0, limit = 10 } = req.query
+
+  const users = await User.find().limit(Number(limit)).skip(Number(from))
+
   res.status(200).json({
     success: true,
-    response: {
-      users: [
-        {
-          id: '123',
-          name: 'Jon Snow'
-        },
-        {
-          id: '321',
-          name: 'Ka Snow'
-        }
-      ]
+    message: 'The users were brought!',
+    data: {
+      users,
+      count: limit
     }
   })
 }
@@ -36,7 +33,7 @@ const usersPost = async (req = request, res = response) => {
 
     res.status(200).json({
       success: true,
-      response: 'The user was created!',
+      message: 'The user was created!',
       data: {
         user
       }
@@ -60,7 +57,7 @@ const usersPut = async (req = request, res = response) => {
 
     res.status(200).json({
       success: true,
-      response: 'The user was updated!',
+      message: 'The user was updated!',
       data: {
         user
       }
