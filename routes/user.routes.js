@@ -4,7 +4,8 @@ const { check } = require('express-validator')
 const {
   usersGet,
   usersPost,
-  usersPut
+  usersPut,
+  usersDelete
 } = require('../controllers/user.controller')
 const { checkFields } = require('../middlewares/fields-validator')
 
@@ -15,6 +16,13 @@ const {
 } = require('../helpers/db-validators')
 
 router.get('/', usersGet)
+
+router.get('/:id', (req, res) => {
+  res.status(200).json({
+    success: true,
+    id: req.params.id
+  })
+})
 
 router.post(
   '/',
@@ -42,7 +50,15 @@ router.put(
   usersPut
 )
 
-router.delete('/', (req, res) => {})
+router.delete(
+  '/:id',
+  [
+    check('id', 'It is not a valid ID').isMongoId(),
+    check('id').custom(checkIdExists),
+    checkFields
+  ],
+  usersDelete
+)
 
 router.patch('/', (req, res) => {})
 
