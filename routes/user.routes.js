@@ -14,12 +14,7 @@ const {
   validateRoleField
 } = require('../helpers/db-validators')
 
-const {
-  checkAdminRole,
-  // checkFields,
-  checkJWT,
-  checkRoles
-} = require('../middlewares')
+const { checkAdminRole, checkFields, checkJWT } = require('../middlewares')
 
 router.get('/', usersGet)
 
