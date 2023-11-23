@@ -14,8 +14,12 @@ const {
   validateRoleField
 } = require('../helpers/db-validators')
 
-const { checkFields } = require('../middlewares/fields-validator')
-const { checkJWT } = require('../middlewares/check-token')
+const {
+  checkAdminRole,
+  // checkFields,
+  checkJWT,
+  checkRoles
+} = require('../middlewares')
 
 router.get('/', usersGet)
 
@@ -28,7 +32,6 @@ router.get('/:id', (req, res) => {
 
 router.post(
   '/',
-  // Middlewares
   [
     check('name', 'The name is mandatory').not().isEmpty(),
     check('email').custom(checkEmailExists),
@@ -55,7 +58,10 @@ router.put(
 router.delete(
   '/:id',
   [
+    // The middlewares are executed in order
+    // We must execute first the JWT validation before other validations
     checkJWT,
+    checkAdminRole,
     check('id', 'It is not a valid ID').isMongoId(),
     check('id').custom(checkIdExists),
     checkFields
