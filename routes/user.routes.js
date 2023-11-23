@@ -7,13 +7,15 @@ const {
   usersPut,
   usersDelete
 } = require('../controllers/user.controller')
-const { checkFields } = require('../middlewares/fields-validator')
 
 const {
   checkEmailExists,
   checkIdExists,
   validateRoleField
 } = require('../helpers/db-validators')
+
+const { checkFields } = require('../middlewares/fields-validator')
+const { checkJWT } = require('../middlewares/check-token')
 
 router.get('/', usersGet)
 
@@ -53,6 +55,7 @@ router.put(
 router.delete(
   '/:id',
   [
+    checkJWT,
     check('id', 'It is not a valid ID').isMongoId(),
     check('id').custom(checkIdExists),
     checkFields
