@@ -5,5 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Denied access</title>
   </head>
-  <body></body>
+  <body>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <div
+      id="g_id_onload"
+      data-client_id="904625933753-7jvbp0fnsqt9ig3bjj37nldlvpliojkj.apps.googleusercontent.com"
+      data-auto_prompt="false"
+      data-callback="handleCredentialResponse"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div>
+    <script>
+      function handleCredentialResponse(response) {
+        const body = {
+          id_token: response.credential
+        }
+
+        fetch('http://localhost:8080/api/auth/google', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res)
+          })
+        console.log('id_token', response.credential)
+      }
+    </script>
+  </body>
 </html>
