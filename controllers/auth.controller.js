@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const User = require('../models/user')
 const { generateToken } = require('../helpers/jwt')
+const { verify } = require('../helpers/google-verify')
 
 const login = async (req = request, res = response) => {
   try {
@@ -50,6 +51,21 @@ const login = async (req = request, res = response) => {
   }
 }
 
+const googleSignIn = async (req = request, res = response) => {
+  const { id_token } = req.body
+
+  verify(id_token)
+
+  res.status(200).json({
+    success: true,
+    message: 'Everything is ok!',
+    data: {
+      token: id_token
+    }
+  })
+}
+
 module.exports = {
-  login
+  login,
+  googleSignIn
 }
