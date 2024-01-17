@@ -54,15 +54,50 @@ const login = async (req = request, res = response) => {
 const googleSignIn = async (req = request, res = response) => {
   const { id_token } = req.body
 
-  verify(id_token)
+  try {
+    const { email, img, name } = await verify(id_token)
 
-  res.status(200).json({
-    success: true,
-    message: 'Everything is ok!',
-    data: {
-      token: id_token
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      const userData = {
+        name,
+        email,
+        password: ':P',
+        img,
+        registeredBy: {
+          google: true,
+          email: false
+        }
+      }
+
+      user = new User(userData)
+      await user.save()
     }
-  })
+
+    if (!user.status) {
+      return res.status(401).json({
+        success: false,
+        message: 'The user is not active. Please talk to an admin'
+      })
+    }
+
+    const token = await generateToken(user.id)
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        user,
+        token
+      }
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err,
+      message: 'It was not possible to check the user'
+    })
+  }
 }
 
 module.exports = {

@@ -46,7 +46,9 @@ const usersPost = async (req = request, res = response) => {
       }
     })
   } catch (err) {
-    res.status(500).json({ error: err, message: 'Internal Server Error' })
+    res
+      .status(500)
+      .json({ success: false, error: err, message: 'Internal Server Error' })
   }
 }
 
@@ -70,7 +72,9 @@ const usersPut = async (req = request, res = response) => {
       }
     })
   } catch (err) {
-    res.status(500).json({ error: err, message: 'Internal Server Error' })
+    res
+      .status(500)
+      .json({ success: false, error: err, message: 'Internal Server Error' })
   }
 }
 
@@ -91,7 +95,9 @@ const usersDelete = async (req = request, res = response) => {
       }
     })
   } catch (err) {
-    res.status(500).json({ error: err, message: 'Internal Server Error' })
+    res
+      .status(500)
+      .json({ success: false, error: err, message: 'Internal Server Error' })
   }
 }
 
