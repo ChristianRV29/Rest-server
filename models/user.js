@@ -19,6 +19,9 @@ const UserSchema = Schema({
     required: true,
     enum: ['ADMIN', 'USER']
   },
+  img: {
+    type: String
+  },
   status: {
     type: Boolean,
     default: true
