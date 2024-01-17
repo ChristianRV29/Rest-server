@@ -10,12 +10,14 @@ async function verify(token = '') {
     audience: CLIENT_ID
   })
 
-  const payload = ticket.getPayload()
+  const { email, name, img } = ticket.getPayload()
 
-  console.log(payload)
+  return {
+    email,
+    img,
+    name
+  }
 }
-
-verify().catch(console.error)
 
 module.exports = {
   verify
