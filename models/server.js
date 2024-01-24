@@ -3,6 +3,7 @@ const cors = require('cors')
 
 const authRouter = require('../routes/auth.routes')
 const usersRouter = require('../routes/user.routes')
+const categoryRouter = require('../routes/category.routes')
 
 const { dbConnection } = require('../database/config')
 
@@ -12,6 +13,7 @@ class Server {
     this.port = process.env.PORT || 8080
     this.paths = {
       auth: '/api/auth',
+      categories: '/api/category',
       users: '/api/user'
     }
 
@@ -42,6 +44,7 @@ class Server {
   routes() {
     this.app.use(this.paths.auth, authRouter)
     this.app.use(this.paths.users, usersRouter)
+    this.app.use(this.paths.categories, categoryRouter)
   }
 
   listen() {
