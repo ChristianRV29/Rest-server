@@ -46,7 +46,7 @@ const login = async (req = request, res = response) => {
     res.status(500).json({
       success: false,
       message: 'Something went wrong',
-      error: err
+      error: { ...err }
     })
   }
 }
@@ -63,7 +63,7 @@ const googleSignIn = async (req = request, res = response) => {
       const userData = {
         name,
         email,
-        password: ':P',
+        password: ':P', // TODO: Fix this
         img,
         registeredBy: {
           google: true,
@@ -84,7 +84,7 @@ const googleSignIn = async (req = request, res = response) => {
 
     const token = await generateToken(user.id)
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       data: {
         user,
