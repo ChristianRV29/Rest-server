@@ -2,10 +2,11 @@ const router = require('express').Router()
 const { check } = require('express-validator')
 
 const {
-  usersGet,
-  usersPost,
-  usersPut,
-  usersDelete
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser
 } = require('../controllers/user.controller')
 
 const {
@@ -16,14 +17,17 @@ const {
 
 const { checkAdminRole, checkFields, checkJWT } = require('../middlewares')
 
-router.get('/', usersGet)
+router.get('/', getUsers)
 
-router.get('/:id', (req, res) => {
-  res.status(200).json({
-    success: true,
-    id: req.params.id
-  })
-})
+router.get(
+  '/:id',
+  [
+    check('id', 'It is not a valid ID').isMongoId(),
+    check('id').custom(checkIdExists),
+    checkFields
+  ],
+  getUserById
+)
 
 router.post(
   '/',
@@ -36,7 +40,7 @@ router.post(
     check('role').custom(validateRoleField),
     checkFields
   ],
-  usersPost
+  createUser
 )
 
 router.put(
@@ -47,7 +51,7 @@ router.put(
     check('role').custom(validateRoleField),
     checkFields
   ],
-  usersPut
+  updateUser
 )
 
 router.delete(
@@ -61,7 +65,7 @@ router.delete(
     check('id').custom(checkIdExists),
     checkFields
   ],
-  usersDelete
+  deleteUser
 )
 
 router.patch('/', (req, res) => {})
