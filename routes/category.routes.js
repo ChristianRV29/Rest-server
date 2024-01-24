@@ -1,8 +1,8 @@
-const { categoryGet } = require('../controllers/category.controller')
+const { getCategories } = require('../controllers/category.controller')
 
 const router = require('express').Router()
 
-router.get('/', categoryGet)
+router.get('/', getCategories)
 
 router.get('/:id', (req, res) => {
   const { id } = req.params

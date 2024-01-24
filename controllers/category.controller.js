@@ -1,6 +1,6 @@
 const { request } = require('express')
 
-const categoryGet = async (req, res = request) => {
+const getCategories = async (req, res = request) => {
   res.status(200).json({
     success: true,
     message: 'Nice'
@@ -8,5 +8,5 @@ const categoryGet = async (req, res = request) => {
 }
 
 module.exports = {
-  categoryGet
+  getCategories
 }

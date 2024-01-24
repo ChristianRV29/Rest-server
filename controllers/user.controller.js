@@ -1,10 +1,9 @@
 const { response, request } = require('express')
-
 const bcrypt = require('bcryptjs')
 
 const User = require('../models/user')
 
-const usersGet = async (req = request, res = response) => {
+const getUsers = async (req = request, res = response) => {
   const { from = 0, limit = 10 } = req.query
 
   const limitOfUsers = Number(limit)
@@ -26,7 +25,39 @@ const usersGet = async (req = request, res = response) => {
   })
 }
 
-const usersPost = async (req = request, res = response) => {
+const getUserById = async (req = request, res = response) => {
+  try {
+    const { id } = req.params
+
+    const user = await User.findById(id)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `The user ${id} does not exist`
+      })
+    } else if (!user.status) {
+      return res.status(400).json({
+        success: false,
+        message: `The user "${id}" is not active`
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'The user has been retrieved successfully',
+      data: user
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: 'Something went wrong',
+      success: false,
+      error: err
+    })
+  }
+}
+
+const createUser = async (req = request, res = response) => {
   try {
     const { name, email, password, role } = req.body
 
@@ -52,7 +83,7 @@ const usersPost = async (req = request, res = response) => {
   }
 }
 
-const usersPut = async (req = request, res = response) => {
+const updateUser = async (req = request, res = response) => {
   try {
     const { id } = req.params
     const { _id, password, ...rest } = req.body
@@ -78,7 +109,7 @@ const usersPut = async (req = request, res = response) => {
   }
 }
 
-const usersDelete = async (req = request, res = response) => {
+const deleteUser = async (req = request, res = response) => {
   try {
     const { id } = req.params
 
@@ -102,8 +133,9 @@ const usersDelete = async (req = request, res = response) => {
 }
 
 module.exports = {
-  usersDelete,
-  usersGet,
-  usersPost,
-  usersPut
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser
 }
