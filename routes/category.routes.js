@@ -1,4 +1,9 @@
-const { getCategories } = require('../controllers/category.controller')
+const {
+  getCategories,
+  createCategory
+} = require('../controllers/category.controller')
+
+const { checkJWT } = require('../middlewares/check-token')
 
 const router = require('express').Router()
 
@@ -16,12 +21,7 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.post('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'POST - Category'
-  })
-})
+router.post('/', [checkJWT], createCategory)
 
 router.put('/:id', (req, res) => {
   const { id } = req.params
