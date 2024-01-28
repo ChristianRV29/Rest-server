@@ -1,4 +1,10 @@
-const { getCategories } = require('../controllers/category.controller')
+const { check } = require('express-validator')
+const {
+  getCategories,
+  createCategory
+} = require('../controllers/category.controller')
+
+const { checkJWT, checkFields } = require('../middlewares')
 
 const router = require('express').Router()
 
@@ -16,12 +22,15 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.post('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'POST - Category'
-  })
-})
+router.post(
+  '/',
+  [
+    checkJWT,
+    check('name', 'The name is mandatory').not().isEmpty(),
+    checkFields
+  ],
+  createCategory
+)
 
 router.put('/:id', (req, res) => {
   const { id } = req.params
