@@ -10,7 +10,13 @@ const CategorySchema = Schema({
     default: true,
     required: [true, 'The status is required']
   },
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 })
+
+CategorySchema.methods.toJSON = function () {
+  const { __v, status, ...data } = this.toObject()
+
+  return data
+}
 
 module.exports = model('Category', CategorySchema)
