@@ -11,7 +11,7 @@ const {
 
 const {
   checkEmailExists,
-  checkIdExists,
+  checkUserIdExists,
   validateRoleField
 } = require('../helpers/db-validators')
 
@@ -23,7 +23,7 @@ router.get(
   '/:id',
   [
     check('id', 'It is not a valid ID').isMongoId(),
-    check('id').custom(checkIdExists),
+    check('id').custom(checkUserIdExists),
     checkFields
   ],
   getUserById
@@ -46,8 +46,8 @@ router.post(
 router.put(
   '/:id',
   [
-    check('id', 'It is not a valid ID').isMongoId(),
-    check('id').custom(checkIdExists),
+    check('id', 'It is not a valid id').isMongoId(),
+    check('id').custom(checkUserIdExists),
     check('role').custom(validateRoleField),
     checkFields
   ],
@@ -62,7 +62,7 @@ router.delete(
     checkJWT,
     checkAdminRole,
     check('id', 'It is not a valid ID').isMongoId(),
-    check('id').custom(checkIdExists),
+    check('id').custom(checkUserIdExists),
     checkFields
   ],
   deleteUser
