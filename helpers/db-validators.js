@@ -26,8 +26,15 @@ const checkCategoryIdExists = async (id) => {
   if (!doesIdExists) throw new Error('The category id does not exist')
 }
 
+const checkCategoryIsActive = async (id) => {
+  const category = await Category.findById(id)
+
+  if (!category.status) throw new Error('The category is not active')
+}
+
 module.exports = {
   checkCategoryIdExists,
+  checkCategoryIsActive,
   checkEmailExists,
   checkUserIdExists,
   validateRoleField
