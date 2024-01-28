@@ -1,26 +1,26 @@
 const { check } = require('express-validator')
 const {
   getCategories,
-  createCategory
+  createCategory,
+  getCategoryById
 } = require('../controllers/category.controller')
 
 const { checkJWT, checkFields } = require('../middlewares')
+const { checkCategoryIdExists } = require('../helpers/db-validators')
 
 const router = require('express').Router()
 
 router.get('/', getCategories)
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params
-
-  res.status(200).json({
-    success: true,
-    data: {
-      id
-    },
-    message: 'GET - Category by id'
-  })
-})
+router.get(
+  '/:id',
+  [
+    check('id', 'It is not a valid id').isMongoId(),
+    check('id').custom(checkCategoryIdExists),
+    checkFields
+  ],
+  getCategoryById
+)
 
 router.post(
   '/',
