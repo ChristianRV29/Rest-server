@@ -1,3 +1,4 @@
+const Category = require('../models/category')
 const Role = require('../models/role')
 const User = require('../models/user')
 
@@ -13,14 +14,28 @@ const checkEmailExists = async (email) => {
   if (doesEmailExist) throw new Error('The email already exists')
 }
 
-const checkIdExists = async (id) => {
+const checkUserIdExists = async (id) => {
   const doesIdExist = await User.findById(id)
 
-  if (!doesIdExist) throw new Error('The id does not exist')
+  if (!doesIdExist) throw new Error('The user id does not exist')
+}
+
+const checkCategoryIdExists = async (id) => {
+  const doesIdExists = await Category.findById(id)
+
+  if (!doesIdExists) throw new Error('The category id does not exist')
+}
+
+const checkCategoryIsActive = async (id) => {
+  const category = await Category.findById(id)
+
+  if (!category.status) throw new Error('The category is not active')
 }
 
 module.exports = {
+  checkCategoryIdExists,
+  checkCategoryIsActive,
   checkEmailExists,
-  checkIdExists,
+  checkUserIdExists,
   validateRoleField
 }

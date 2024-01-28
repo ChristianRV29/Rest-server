@@ -10,7 +10,7 @@ const CategorySchema = Schema({
     default: true,
     required: [true, 'The status is required']
   },
-  user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  created_by: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 })
 
 CategorySchema.methods.toJSON = function () {
