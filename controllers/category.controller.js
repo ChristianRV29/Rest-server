@@ -6,7 +6,9 @@ const createCategory = async (req = request, res = response) => {
   try {
     const { name } = req.body
 
-    const category = await Category.findOne({ name: name.toUpperCase() })
+    const category = await Category.findOne({
+      name: name.toUpperCase()
+    }).populate('created_by')
 
     if (category) {
       return res.status(400).json({
@@ -107,7 +109,11 @@ const updateCategory = async (req = request, res = response) => {
     const { id } = req.params
     const name = req.body.name.toUpperCase()
 
-    const category = await Category.findByIdAndUpdate(id, { name })
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true } // This return the document updated
+    )
 
     res.status(200).json({
       success: true,
