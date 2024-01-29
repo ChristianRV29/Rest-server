@@ -1,9 +1,11 @@
 const express = require('express')
 const cors = require('cors')
 
-const authRouter = require('../routes/auth.routes')
-const usersRouter = require('../routes/user.routes')
-const categoryRouter = require('../routes/category.routes')
+const {
+  Auth: AuthRouter,
+  Categories: CategoriesRouter,
+  Users: UsersRouter
+} = require('../routes')
 
 const { dbConnection } = require('../database/config')
 
@@ -42,9 +44,9 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.paths.auth, authRouter)
-    this.app.use(this.paths.users, usersRouter)
-    this.app.use(this.paths.categories, categoryRouter)
+    this.app.use(this.paths.auth, AuthRouter)
+    this.app.use(this.paths.users, UsersRouter)
+    this.app.use(this.paths.categories, CategoriesRouter)
   }
 
   listen() {
