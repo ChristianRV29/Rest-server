@@ -40,6 +40,7 @@ router.post(
 router.put(
   '/:id',
   [
+    checkJWT,
     check('id').isMongoId(),
     check('id').custom(checkCategoryIdExists),
     check('id').custom(checkCategoryIsActive),
@@ -52,6 +53,7 @@ router.put(
 router.delete(
   '/:id',
   [
+    checkJWT,
     check('id').isMongoId(),
     check('id').custom(checkCategoryIdExists),
     check('id').custom(checkCategoryIsActive),
