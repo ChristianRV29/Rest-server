@@ -8,7 +8,7 @@ const createCategory = async (req = request, res = response) => {
 
     const category = await Category.findOne({
       name: name.toUpperCase()
-    }).populate('created_by')
+    })
 
     if (category) {
       return res.status(400).json({

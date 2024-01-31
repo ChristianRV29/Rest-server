@@ -4,6 +4,7 @@ const cors = require('cors')
 const {
   Auth: AuthRouter,
   Categories: CategoriesRouter,
+  Products: ProductsRouter,
   Users: UsersRouter
 } = require('../routes')
 
@@ -16,6 +17,7 @@ class Server {
     this.paths = {
       auth: '/api/auth',
       categories: '/api/category',
+      products: '/api/product',
       users: '/api/user'
     }
 
@@ -45,8 +47,9 @@ class Server {
 
   routes() {
     this.app.use(this.paths.auth, AuthRouter)
-    this.app.use(this.paths.users, UsersRouter)
     this.app.use(this.paths.categories, CategoriesRouter)
+    this.app.use(this.paths.products, ProductsRouter)
+    this.app.use(this.paths.users, UsersRouter)
   }
 
   listen() {

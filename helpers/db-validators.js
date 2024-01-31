@@ -1,6 +1,4 @@
-const Category = require('../models/category')
-const Role = require('../models/role')
-const User = require('../models/user')
+const { Product, Category, Role, User } = require('../models')
 
 const validateRoleField = async (role = '') => {
   const doesRoleExist = await Role.findOne({ role })
@@ -14,28 +12,30 @@ const checkEmailExists = async (email) => {
   if (doesEmailExist) throw new Error('The email already exists')
 }
 
-const checkUserIdExists = async (id) => {
+const checkUser = async (id) => {
   const doesIdExist = await User.findById(id)
 
-  if (!doesIdExist) throw new Error('The user id does not exist')
+  if (!doesIdExist) throw new Error('The user does not exist')
 }
 
-const checkCategoryIdExists = async (id) => {
-  const doesIdExists = await Category.findById(id)
-
-  if (!doesIdExists) throw new Error('The category id does not exist')
-}
-
-const checkCategoryIsActive = async (id) => {
+const checkCategory = async (id) => {
   const category = await Category.findById(id)
 
+  if (!category) throw new Error('The category does not exist')
   if (!category.status) throw new Error('The category is not active')
 }
 
+const checkProduct = async (id) => {
+  const product = await Product.findById(id)
+
+  if (!product) throw new Error('The product does not exist')
+  if (!product.status) throw new Error('The product is not active')
+}
+
 module.exports = {
-  checkCategoryIdExists,
-  checkCategoryIsActive,
+  checkCategory,
   checkEmailExists,
-  checkUserIdExists,
+  checkProduct,
+  checkUser,
   validateRoleField
 }

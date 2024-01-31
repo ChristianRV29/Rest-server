@@ -8,10 +8,7 @@ const {
 } = require('../controllers/category.controller')
 
 const { checkJWT, checkFields } = require('../middlewares')
-const {
-  checkCategoryIdExists,
-  checkCategoryIsActive
-} = require('../helpers/db-validators')
+const { checkCategory } = require('../helpers/db-validators')
 
 const router = require('express').Router()
 
@@ -21,7 +18,7 @@ router.get(
   '/:id',
   [
     check('id', 'It is not a valid id').isMongoId(),
-    check('id').custom(checkCategoryIdExists),
+    check('id').custom(checkCategory),
     checkFields
   ],
   getCategoryById
@@ -42,8 +39,7 @@ router.put(
   [
     checkJWT,
     check('id').isMongoId(),
-    check('id').custom(checkCategoryIdExists),
-    check('id').custom(checkCategoryIsActive),
+    check('id').custom(checkCategory),
     check('name', 'The name is mandatory').not().isEmpty(),
     checkFields
   ],
@@ -55,8 +51,7 @@ router.delete(
   [
     checkJWT,
     check('id').isMongoId(),
-    check('id').custom(checkCategoryIdExists),
-    check('id').custom(checkCategoryIsActive),
+    check('id').custom(checkCategory),
     checkFields
   ],
   deleteCategory

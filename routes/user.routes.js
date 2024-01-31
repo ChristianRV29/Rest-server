@@ -11,11 +11,11 @@ const {
 
 const {
   checkEmailExists,
-  checkUserIdExists,
+  checkUser,
   validateRoleField
 } = require('../helpers/db-validators')
 
-const { checkAdminRole, checkFields, checkJWT } = require('../middlewares')
+const { checkFields, checkJWT, checkAdminRole } = require('../middlewares')
 
 router.get('/', getUsers)
 
@@ -23,7 +23,7 @@ router.get(
   '/:id',
   [
     check('id', 'It is not a valid ID').isMongoId(),
-    check('id').custom(checkUserIdExists),
+    check('id').custom(checkUser),
     checkFields
   ],
   getUserById
@@ -47,7 +47,7 @@ router.put(
   '/:id',
   [
     check('id', 'It is not a valid id').isMongoId(),
-    check('id').custom(checkUserIdExists),
+    check('id').custom(checkUser),
     check('role').custom(validateRoleField),
     checkFields
   ],
@@ -57,17 +57,13 @@ router.put(
 router.delete(
   '/:id',
   [
-    // The middlewares are executed in order
-    // We must execute first the JWT validation before other validations
     checkJWT,
     checkAdminRole,
     check('id', 'It is not a valid ID').isMongoId(),
-    check('id').custom(checkUserIdExists),
+    check('id').custom(checkUser),
     checkFields
   ],
   deleteUser
 )
-
-router.patch('/', (req, res) => {})
 
 module.exports = router
