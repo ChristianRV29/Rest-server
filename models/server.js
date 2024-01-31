@@ -1,9 +1,12 @@
 const express = require('express')
 const cors = require('cors')
 
-const authRouter = require('../routes/auth.routes')
-const usersRouter = require('../routes/user.routes')
-const categoryRouter = require('../routes/category.routes')
+const {
+  Auth: AuthRouter,
+  Categories: CategoriesRouter,
+  Products: ProductsRouter,
+  Users: UsersRouter
+} = require('../routes')
 
 const { dbConnection } = require('../database/config')
 
@@ -14,6 +17,7 @@ class Server {
     this.paths = {
       auth: '/api/auth',
       categories: '/api/category',
+      products: '/api/product',
       users: '/api/user'
     }
 
@@ -42,9 +46,10 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.paths.auth, authRouter)
-    this.app.use(this.paths.users, usersRouter)
-    this.app.use(this.paths.categories, categoryRouter)
+    this.app.use(this.paths.auth, AuthRouter)
+    this.app.use(this.paths.categories, CategoriesRouter)
+    this.app.use(this.paths.products, ProductsRouter)
+    this.app.use(this.paths.users, UsersRouter)
   }
 
   listen() {
