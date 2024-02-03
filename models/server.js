@@ -5,6 +5,7 @@ const {
   Auth: AuthRouter,
   Categories: CategoriesRouter,
   Products: ProductsRouter,
+  Searches: SearchesRouter,
   Users: UsersRouter
 } = require('../routes')
 
@@ -18,6 +19,7 @@ class Server {
       auth: '/api/auth',
       categories: '/api/category',
       products: '/api/product',
+      search: '/api/search',
       users: '/api/user'
     }
 
@@ -49,6 +51,7 @@ class Server {
     this.app.use(this.paths.auth, AuthRouter)
     this.app.use(this.paths.categories, CategoriesRouter)
     this.app.use(this.paths.products, ProductsRouter)
+    this.app.use(this.paths.search, SearchesRouter)
     this.app.use(this.paths.users, UsersRouter)
   }
 
