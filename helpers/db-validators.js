@@ -13,9 +13,10 @@ const checkEmailExists = async (email) => {
 }
 
 const checkUser = async (id) => {
-  const doesIdExist = await User.findById(id)
+  const user = await User.findById(id)
 
-  if (!doesIdExist) throw new Error('The user does not exist')
+  if (!user) throw new Error('The user does not exist')
+  if (!user.status) throw new Error('The user is not active')
 }
 
 const checkCategory = async (id) => {
