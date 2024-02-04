@@ -48,7 +48,7 @@ const getCategories = async (req = request, res = response) => {
     const query = { status: true }
 
     const allCategories = Category.find(query)
-      .populate('created_by')
+      .populate({ path: 'created_by', select: ['name', 'email'] })
       .limit(Number(limit))
       .skip(Number(from))
 

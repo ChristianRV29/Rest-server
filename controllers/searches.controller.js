@@ -74,10 +74,9 @@ const findProducts = async (term = '', res = response) => {
     const isMongoId = ObjectId.isValid(term)
 
     if (isMongoId) {
-      const product = await Product.findById(term).populate(
-        'category',
-        'created_by '
-      )
+      const product = await Product.findById(term)
+        .populate({ path: 'category', select: 'name' })
+        .populate({ path: 'user', select: ['name', 'email'] })
       if (product) {
         return res.status(200).json({
           success: true,
@@ -86,7 +85,9 @@ const findProducts = async (term = '', res = response) => {
       } else {
         const productsByCategory = await Product.find({
           category: term
-        }).populate('category', 'user')
+        })
+          .populate({ path: 'category', select: 'name' })
+          .populate({ path: 'user', select: ['name', 'email'] })
 
         return res.status(200).json({
           success: true,
@@ -99,7 +100,9 @@ const findProducts = async (term = '', res = response) => {
     const products = await Product.find({
       $or: [{ name: regex }, { description: regex }],
       $and: [{ status: true }]
-    }).populate('category', 'user')
+    })
+      .populate({ path: 'category', select: 'name' })
+      .populate({ path: 'user', select: ['name', 'email'] })
 
     res.status(200).json({
       success: true,
