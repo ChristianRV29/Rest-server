@@ -8,10 +8,10 @@ const getProducts = async (req = request, res = response) => {
 
   try {
     const allProducts = Product.find({ status: true })
+      .populate({ path: 'user', select: ['name', 'email'] })
+      .populate({ path: 'category', select: 'name' })
       .limit(limitOfProducts)
       .skip(Number(from))
-      .populate('user')
-      .populate('category')
 
     const totalProducts = Product.countDocuments({ status: true })
 
@@ -40,8 +40,8 @@ const getProductById = async (req = request, res = response) => {
 
   try {
     const product = await Product.findById(id)
-      .populate('user')
-      .populate('category')
+      .populate({ path: 'user', select: ['name', 'email'] })
+      .populate({ path: 'category', select: 'name' })
 
     if (!product) {
       return res.status(404).json({
