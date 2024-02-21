@@ -34,6 +34,45 @@ const uploadFile = async (req = request, res = response) => {
   }
 }
 
+const updateUserImage = async (req = request, res = response) => {
+  try {
+    const { collection, id } = req.params
+
+    let model
+
+    switch (collection) {
+      case 'users':
+        model = await User.findById(id)
+
+        if (!model) {
+          return res.status(404).json({
+            success: false,
+            message: 'User not found'
+          })
+        }
+
+        model.img = req.body.img
+
+        break
+      case 'products':
+        break
+
+      default:
+        return res.status(500).json({
+          success: false,
+          message: 'Collection is not valid'
+        })
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: err,
+      message: 'Internal server error',
+      success: false
+    })
+  }
+}
+
 module.exports = {
+  updateUserImage,
   uploadFile
 }
