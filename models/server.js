@@ -1,11 +1,13 @@
 const express = require('express')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 
 const {
   Auth: AuthRouter,
   Categories: CategoriesRouter,
   Products: ProductsRouter,
   Searches: SearchesRouter,
+  Uploads: UploadsRouter,
   Users: UsersRouter
 } = require('../routes')
 
@@ -20,6 +22,7 @@ class Server {
       categories: '/api/category',
       products: '/api/product',
       search: '/api/search',
+      uploads: '/api/uploads',
       users: '/api/user'
     }
 
@@ -45,6 +48,12 @@ class Server {
 
     // Public directory
     this.app.use(express.static('public'))
+
+    this.app.use(
+      fileUpload({
+        createParentPath: true
+      })
+    )
   }
 
   routes() {
@@ -52,6 +61,7 @@ class Server {
     this.app.use(this.paths.categories, CategoriesRouter)
     this.app.use(this.paths.products, ProductsRouter)
     this.app.use(this.paths.search, SearchesRouter)
+    this.app.use(this.paths.uploads, UploadsRouter)
     this.app.use(this.paths.users, UsersRouter)
   }
 
