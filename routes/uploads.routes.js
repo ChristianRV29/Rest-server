@@ -1,5 +1,6 @@
 const { check } = require('express-validator')
 const { checkFields, checkFiles } = require('../middlewares')
+const { updateImage } = require('../controllers/uploads.controller')
 
 const { uploadFile, updateUserImage } = require('../controllers').Uploads
 
@@ -18,7 +19,7 @@ router.put(
     checkFiles,
     checkFields
   ],
-  updateUserImage
+  updateImage
 )
 
 module.exports = router
