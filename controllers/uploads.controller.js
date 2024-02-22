@@ -1,6 +1,8 @@
 const { request, response } = require('express')
-const { organizeFiles } = require('../helpers')
+const fs = require('fs')
+const path = require('path')
 
+const { organizeFiles } = require('../helpers')
 const { User, Product } = require('../models')
 
 const uploadFile = async (req = request, res = response) => {
@@ -36,7 +38,7 @@ const uploadFile = async (req = request, res = response) => {
   }
 }
 
-const updateUserImage = async (req = request, res = response) => {
+const updateImage = async (req = request, res = response) => {
   try {
     const { collection, id } = req.params
 
@@ -70,6 +72,14 @@ const updateUserImage = async (req = request, res = response) => {
       })
     }
 
+    if (model.img) {
+      const imgPath = path.join(__dirname, '../uploads', collection, model.img)
+
+      if (fs.existsSync(imgPath)) {
+        fs.unlinkSync(imgPath)
+      }
+    }
+
     const { error, data } = await organizeFiles(req.files, collection)
 
     if (error) {
@@ -99,6 +109,6 @@ const updateUserImage = async (req = request, res = response) => {
 }
 
 module.exports = {
-  updateUserImage,
+  updateImage,
   uploadFile
 }
