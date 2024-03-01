@@ -19,6 +19,8 @@ async function verify(token = '') {
   }
 }
 
+// verify().catch(console.error)
+
 module.exports = {
   verify
 }
