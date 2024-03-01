@@ -6,6 +6,8 @@
     <title>Denied access</title>
   </head>
   <body>
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="./js/socket.js"></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <div
       id="g_id_onload"
@@ -36,9 +38,11 @@
           body: JSON.stringify(body)
         })
           .then((res) => res.json())
-          .then((res) => {
-            console.log(res)
+          .then(({ data }) => {
+            const { token } = data
+            localStorage.setItem('token', token)
           })
+          .catch(console.error)
       }
     </script>
   </body>
