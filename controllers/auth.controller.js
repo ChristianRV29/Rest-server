@@ -57,14 +57,18 @@ const googleSignIn = async (req = request, res = response) => {
   try {
     const { email, img, name } = await verify(id_token).catch(console.error)
 
-    const user = await User.findOne({ email })
+    let user = await User.findOne({ email })
 
     if (!user) {
+      const salt = bcrypt.genSaltSync()
+      const password = bcrypt.hashSync('123456', salt) // Integrate an algorithm to generate randoms passwords;
+
       const userData = {
-        name,
         email,
-        password: ':P', // TODO: Fix this
         img,
+        name,
+        password,
+        role: 'USER',
         registeredBy: {
           google: true,
           email: false
@@ -72,13 +76,14 @@ const googleSignIn = async (req = request, res = response) => {
       }
 
       user = new User(userData)
+
       await user.save()
     }
 
     if (!user.status) {
-      return res.status(401).json({
+      return res.status(400).json({
         success: false,
-        message: 'The user is not active. Please talk to an admin'
+        message: 'The user is not active - contact the administrator'
       })
     }
 
@@ -86,6 +91,7 @@ const googleSignIn = async (req = request, res = response) => {
 
     res.status(200).json({
       success: true,
+      message: 'Successfully logged in',
       data: {
         user,
         token
