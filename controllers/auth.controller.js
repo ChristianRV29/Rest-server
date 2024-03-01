@@ -1,9 +1,8 @@
 const { request, response } = require('express')
 const bcrypt = require('bcryptjs')
 
-const { generateToken } = require('../helpers/jwt')
+const { generateRandomPassword, verify, generateToken } = require('../helpers')
 const { User } = require('../models')
-const { verify } = require('../helpers/google-verify')
 
 const login = async (req = request, res = response) => {
   try {
@@ -61,13 +60,15 @@ const googleSignIn = async (req = request, res = response) => {
 
     if (!user) {
       const salt = bcrypt.genSaltSync()
-      const password = bcrypt.hashSync('123456', salt) // Integrate an algorithm to generate randoms passwords;
+      const randomPassword = generateRandomPassword()
+
+      const defaultPassword = bcrypt.hashSync(randomPassword, salt)
 
       const userData = {
         email,
         img,
         name,
-        password,
+        password: defaultPassword,
         role: 'USER',
         registeredBy: {
           google: true,
