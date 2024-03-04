@@ -1,28 +1,26 @@
-const express = require('express')
+const { createServer } = require('http')
+const { Server: SocketServer } = require('socket.io')
 const cors = require('cors')
+const express = require('express')
 const fileUpload = require('express-fileupload')
 
-const {
-  Auth: AuthRouter,
-  Categories: CategoriesRouter,
-  Products: ProductsRouter,
-  Searches: SearchesRouter,
-  Uploads: UploadsRouter,
-  Users: UsersRouter
-} = require('../routes')
+const authRouter = require('../routes/auth.routes')
+const usersRouter = require('../routes/user.routes')
+const categoryRouter = require('../routes/category.routes')
 
 const { dbConnection } = require('../database/config')
+const { socketController } = require('../sockets')
 
 class Server {
   constructor() {
     this.app = express()
+    this.server = createServer(this.app)
+    this.io = new SocketServer(this.server)
+
     this.port = process.env.PORT || 8080
     this.paths = {
       auth: '/api/auth',
       categories: '/api/category',
-      products: '/api/product',
-      search: '/api/search',
-      uploads: '/api/uploads',
       users: '/api/user'
     }
 
@@ -34,10 +32,16 @@ class Server {
 
     // Connect to data base
     this.connectDB()
+
+    this.sockets()
   }
 
   async connectDB() {
     await dbConnection()
+  }
+
+  sockets() {
+    this.io.on('connection', socketController)
   }
 
   middlewares() {
@@ -58,17 +62,14 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.paths.auth, AuthRouter)
-    this.app.use(this.paths.categories, CategoriesRouter)
-    this.app.use(this.paths.products, ProductsRouter)
-    this.app.use(this.paths.search, SearchesRouter)
-    this.app.use(this.paths.uploads, UploadsRouter)
-    this.app.use(this.paths.users, UsersRouter)
+    this.app.use(this.paths.auth, authRouter)
+    this.app.use(this.paths.users, usersRouter)
+    this.app.use(this.paths.categories, categoryRouter)
   }
 
   listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Example app listening at http://localhost:${this.port}`)
+    this.server.listen(this.port, () => {
+      console.log(`Server listening at http://localhost:${this.port}`)
     })
   }
 }
