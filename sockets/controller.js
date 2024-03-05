@@ -1,13 +1,16 @@
 const { Socket } = require('socket.io')
+const { checkUserToken } = require('../helpers')
 
-const socketController = (socket = new Socket()) => {
-  socket.emit('server-message', { message: 'Welcome to the server' })
+const socketController = async (socket = new Socket()) => {
+  const token = socket.handshake.headers['x-token'] || ''
 
-  socket.on('client-message', (payload) => {
-    const { message } = payload
+  const user = await checkUserToken(token)
 
-    console.log('Message received on server:', message)
-  })
+  if (!user) {
+    return socket.disconnect()
+  }
+
+  console.log('Client connected', user.name)
 }
 
 module.exports = {
