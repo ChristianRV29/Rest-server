@@ -22,7 +22,6 @@
               id="id-receptor"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="id"
-              required
             />
             <input
               type="text"
@@ -46,9 +45,10 @@
         </section>
       </div>
 
-      <section class="rounded-md border-gray-600 border-2 p-4 h-80 min-w-52">
+      <section class="rounded-md border-gray-600 border-2 p-4 min-w-52">
         <h1 class="font-mono text-white mb-2">Chat</h1>
         <hr />
+        <ul class="mt-4 flex mx-2 flex-col gap-4" id="all-messages"></ul>
       </section>
     </main>
     <script src="./js/chat.js"></script>
