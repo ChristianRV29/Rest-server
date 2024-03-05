@@ -1,7 +1,10 @@
-const { Socket } = require('socket.io')
+const { Chat } = require('../models')
 const { checkUserToken } = require('../helpers')
+const { Socket } = require('socket.io')
 
-const socketController = async (socket = new Socket()) => {
+const chatHandler = new Chat()
+
+const socketController = async (socket = new Socket(), io) => {
   const token = socket.handshake.headers['x-token'] || ''
 
   const user = await checkUserToken(token)
@@ -10,7 +13,13 @@ const socketController = async (socket = new Socket()) => {
     return socket.disconnect()
   }
 
-  console.log('Client connected', user.name)
+  chatHandler.addUser(user)
+  io.emit('active-users', chatHandler.usersList)
+
+  socket.on('disconnect', () => {
+    chatHandler.removeUser(user.id)
+    io.emit('active-users', chatHandler.usersList)
+  })
 }
 
 module.exports = {
