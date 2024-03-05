@@ -20,6 +20,12 @@ const socketController = async (socket = new Socket(), io) => {
     chatHandler.removeUser(user.id)
     io.emit('active-users', chatHandler.usersList)
   })
+
+  socket.on('message', ({ message, user }) => {
+    chatHandler.sendMessage(message, user, null)
+
+    io.emit('all-messages', chatHandler.lastTenMessages)
+  })
 }
 
 module.exports = {
