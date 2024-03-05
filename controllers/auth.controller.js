@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const { generateRandomPassword, verify, generateToken } = require('../helpers')
 const { User } = require('../models')
+const { checkJWT } = require('../middlewares')
 
 const login = async (req = request, res = response) => {
   try {
@@ -107,7 +108,31 @@ const googleSignIn = async (req = request, res = response) => {
   }
 }
 
+const renewToken = async (req = request, res = response) => {
+  try {
+    const { user } = req
+
+    const token = await generateToken(user.id)
+
+    res.status(200).json({
+      success: true,
+      message: 'Token renewed',
+      data: {
+        user,
+        token
+      }
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong - renew token',
+      error: err
+    })
+  }
+}
+
 module.exports = {
+  googleSignIn,
   login,
-  googleSignIn
+  renewToken
 }
