@@ -13,7 +13,10 @@ const socketController = async (socket = new Socket(), io) => {
     return socket.disconnect()
   }
 
+  socket.join(user.id)
+
   chatHandler.addUser(user)
+
   io.emit('active-users', chatHandler.usersList)
 
   socket.on('disconnect', () => {
@@ -25,6 +28,10 @@ const socketController = async (socket = new Socket(), io) => {
     chatHandler.sendMessage(message, user, null)
 
     io.emit('all-messages', chatHandler.lastTenMessages)
+  })
+
+  socket.on('private-message', ({ from, message, to }) => {
+    io.to(to).emit('private-message', { from, message })
   })
 }
 
