@@ -2,6 +2,7 @@ const activeUsersContainer = document.querySelector('#active-users')
 const allMessagesContainer = document.querySelector('#all-messages')
 const form = document.querySelector('form')
 const messageInput = document.querySelector('#message')
+const idInput = document.querySelector('#id-receptor')
 
 const checkToken = async () => {
   const token = localStorage.getItem('token')
@@ -46,7 +47,19 @@ const checkToken = async () => {
     form.addEventListener('submit', (e) => {
       e.preventDefault()
 
-      socket.emit('message', { message: messageInput.value, user })
+      if (idInput.value !== '') {
+        socket.emit('private-message', {
+          from: user,
+          message: messageInput.value,
+          to: idInput.value
+        })
+      } else {
+        socket.emit('message', { message: messageInput.value, user })
+      }
+    })
+
+    socket.on('private-message', ({ from, message }) => {
+      console.log('Private message', { from, message })
     })
 
     socket.on('all-messages', (messages = []) => {
